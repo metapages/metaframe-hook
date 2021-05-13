@@ -1,0 +1,37 @@
+{
+    "name": "@metapages/metaframe-hook",
+    "public": true,
+    "version": "0.2.9",
+    "description": "Use react hooks to interact with metaframe inputs and outputs",
+    "repository": "https://github.com/metapages/metaframe-hook",
+    "homepage": "https://github.com/metapages/metaframe-hook",
+    "scripts": {
+        "build": "./node_modules/typescript/bin/tsc",
+        "test": "node test/test.js"
+    },
+    "main": "dist/index.js",
+    "source": "src/index.ts",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "peerDependencies": {
+        "@metapages/metapage": "^0.5.10",
+        "react": "^16.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.5",
+        "@typescript-eslint/parser": "^4.22.1",
+        "typescript": "4.2.3"
+    },
+    "keywords": [
+        "hook",
+        "metaframe",
+        "metapage"
+    ],
+    "author": "Dion Amago Whitehead <dion@transition9.com>",
+    "license": "Apache-2.0",
+    "browserslist": [
+        "Chrome 78"
+    ]
+}

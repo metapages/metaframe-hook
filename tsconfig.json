@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "outDir": "dist",
+        "declaration": true,
+        "declarationMap": true,
+        "esModuleInterop": true,
+        "lib": ["dom", "ES2019"],
+        "jsx": "react",
+        "module": "ES2020",
+        "moduleResolution": "node",
+        "rootDir": "src",
+        "strict": true,
+        "sourceMap": true,
+        "target": "ES2015"
+    },
+    "exclude": [
+        "dist",
+        "node_modules",
+        "src/**/*.spec.ts"
+      ],
+    "include": ["src"]
+}
