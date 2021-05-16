@@ -4,7 +4,7 @@ import { useHashParam } from "./hookHashParam";
 /**
  * Hook for getting/setting a hash param JSON blob (safely encoded)
  */
-export const useHashParamJson = <T extends Record<string, any>>(
+export const useHashParamJson = <T,>(
   key: string,
   defaultBlob?: T
 ): [T | undefined, (v: T | undefined) => void] => {
