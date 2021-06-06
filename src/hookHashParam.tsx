@@ -66,7 +66,7 @@ export const useHashParam = (
 };
 
 // Get everything after # then after ?
-const getHashParams = (): [string, Record<string, string>] => {
+export const getHashParams = (): [string, Record<string, string>] => {
   let hashString = window.location.hash.substr(1);
   const queryIndex = hashString.indexOf("?");
   if (queryIndex === -1) {
