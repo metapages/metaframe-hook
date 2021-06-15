@@ -57,7 +57,15 @@ export const useHashParam = (
       if (queryIndex > -1) {
         preHashString = hashString.substr(0, queryIndex);
       }
-      window.location.hash = `${preHashString}?${hash}`;
+
+      // Replace the state so the back button works correctly
+      const urlBlob = new URL(window.location.href);
+      urlBlob.hash = `${preHashString}?${hash}`;
+      window.history.replaceState(
+        null,
+        document.title,
+        `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
+      );
     },
     []
   );
