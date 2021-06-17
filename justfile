@@ -18,6 +18,7 @@ _help:
 build: clean _build
 _build:
     npm run build
+    @echo '👍 built in ./dist'
 
 # Develop:
 #   1. just dev
@@ -36,7 +37,8 @@ dev:
 # npm link the package in dist for local development. In the other project: 'npm link <this project>'
 @link: unlink build
     npm link
-    echo -e "👉 in the other project: 'npm link {{NPM_MODULE}}'"
+    echo -e "👉 in      *this* project: just watch"
+    echo -e "👉 in the *other* project: npm link {{NPM_MODULE}}"
 
 # unlink the package in dist from local development. You probably don't ever need to do this
 @unlink:

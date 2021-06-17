@@ -58,14 +58,16 @@ export const useHashParam = (
         preHashString = hashString.substr(0, queryIndex);
       }
 
+      window.location.hash = `${preHashString}?${hash}`
+      // The following will NOT work to trigger a 'hashchange' event:
       // Replace the state so the back button works correctly
-      const urlBlob = new URL(window.location.href);
-      urlBlob.hash = `${preHashString}?${hash}`;
-      window.history.replaceState(
-        null,
-        document.title,
-        `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
-      );
+      // const urlBlob = new URL(window.location.href);
+      // urlBlob.hash = `${preHashString}?${hash}`;
+      // window.history.replaceState(
+      //   null,
+      //   document.title,
+      //   `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
+      // );
     },
     []
   );
