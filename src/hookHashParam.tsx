@@ -64,9 +64,6 @@ export const useHashParam = (
         preHashString = hashString.substr(0, queryIndex);
       }
 
-      console.log(
-        `🍟 window.history.replaceState and firing custom event: hashchange`
-      );
       const urlBlob = new URL(window.location.href);
       urlBlob.hash = `${preHashString}?${hash}`;
       if (opts?.modifyHistory) {
@@ -82,6 +79,7 @@ export const useHashParam = (
           `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
         );
         // Manually trigger a hashchange event:
+        // I don't know how to add the previous and new url parameters
         window.dispatchEvent(new HashChangeEvent("hashchange"));
       }
     },

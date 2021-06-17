@@ -1,7 +1,7 @@
 {
     "name": "@metapages/metaframe-hook",
     "public": true,
-    "version": "0.5.0",
+    "version": "0.5.1",
     "description": "Use react hooks to interact with metaframe inputs and outputs",
     "repository": "https://github.com/metapages/metaframe-hook",
     "homepage": "https://github.com/metapages/metaframe-hook",
