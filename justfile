@@ -34,11 +34,12 @@ dev:
     echo "👀 watching and building into ./dist..."
     watchexec --watch src -- 'just _build'
 
-# npm link the package in dist for local development. In the other project: 'npm link <this project>'
+# npm link the package in dist for local development AND start up a watching/rebuild process. In the other project: 'npm link <this project>'
 @link: unlink build
     npm link
     echo -e "👉 in      *this* project: just watch"
     echo -e "👉 in the *other* project: npm link {{NPM_MODULE}}"
+    just watch
 
 # unlink the package in dist from local development. You probably don't ever need to do this
 @unlink:

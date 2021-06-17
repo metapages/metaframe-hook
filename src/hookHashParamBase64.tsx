@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHashParam } from "./hookHashParam";
+import { useHashParam, SetHashParamOpts } from "./hookHashParam";
 
 /**
  * Hook for getting/setting hash param string value, but base64 encoded
@@ -8,14 +8,16 @@ import { useHashParam } from "./hookHashParam";
 export const useHashParamBase64 = (
   key: string,
   defaultValue?: string
-): [string | undefined, (v: string | undefined) => void] => {
+): [
+  string | undefined,
+  (v: string | undefined, opts?: SetHashParamOpts) => void
+] => {
   const [hashParamString, setHashParamString] = useHashParam(
     key,
     defaultValue ? stringToBase64String(defaultValue) : undefined
   );
-  const [decodedString, setDecodedString] = useState<string | undefined>(
-    defaultValue
-  );
+  const [decodedString, setDecodedString] =
+    useState<string | undefined>(defaultValue);
 
   // if the hash string value changes
   useEffect(() => {
@@ -23,12 +25,12 @@ export const useHashParamBase64 = (
   }, [key, hashParamString, setDecodedString]);
 
   const encodeAndSetStringParam = useCallback(
-    (rawString: string | undefined) => {
+    (rawString: string | undefined, opts?: SetHashParamOpts) => {
       if (rawString === null || rawString === undefined) {
-        setHashParamString(undefined);
+        setHashParamString(undefined, opts);
       } else {
         const base64Json = stringToBase64String(rawString);
-        setHashParamString(base64Json);
+        setHashParamString(base64Json, opts);
       }
     },
     [setHashParamString]

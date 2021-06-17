@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 
+export type SetHashParamOpts = {
+  modifyHistory?: boolean;
+};
 /**
  * Hook for getting/setting hash params
  */
 export const useHashParam = (
   key: string,
   defaultValue?: string
-): [string | undefined, (v: string | undefined) => void] => {
+): [
+  string | undefined,
+  (v: string | undefined, opts?: SetHashParamOpts) => void
+] => {
   const [hashParam, setHashParamInternal] = useState<string | undefined>(
     getHashParams()[1][key] || defaultValue
   );
@@ -21,7 +27,7 @@ export const useHashParam = (
   }, []);
 
   const setParam: (v: string | undefined) => void = useCallback(
-    (value: string | undefined) => {
+    (value: string | undefined, opts?: SetHashParamOpts) => {
       const paramHash = getHashParams()[1];
 
       let changed = false;
@@ -58,16 +64,26 @@ export const useHashParam = (
         preHashString = hashString.substr(0, queryIndex);
       }
 
-      window.location.hash = `${preHashString}?${hash}`
-      // The following will NOT work to trigger a 'hashchange' event:
-      // Replace the state so the back button works correctly
-      // const urlBlob = new URL(window.location.href);
-      // urlBlob.hash = `${preHashString}?${hash}`;
-      // window.history.replaceState(
-      //   null,
-      //   document.title,
-      //   `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
-      // );
+      console.log(
+        `🍟 window.history.replaceState and firing custom event: hashchange`
+      );
+      const urlBlob = new URL(window.location.href);
+      urlBlob.hash = `${preHashString}?${hash}`;
+      if (opts?.modifyHistory) {
+        // adds to browser history, so affects back button
+        // fires "hashchange" event
+        window.location.hash = `${preHashString}?${hash}`;
+      } else {
+        // The following will NOT work to trigger a 'hashchange' event:
+        // Replace the state so the back button works correctly
+        window.history.replaceState(
+          null,
+          document.title,
+          `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
+        );
+        // Manually trigger a hashchange event:
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+      }
     },
     []
   );

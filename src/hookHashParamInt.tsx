@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHashParam } from "./hookHashParam";
+import { useHashParam, SetHashParamOpts } from "./hookHashParam";
 
 /**
  * Hook for getting/setting a hash param int (safely encoded)
@@ -7,12 +7,15 @@ import { useHashParam } from "./hookHashParam";
 export const useHashParamInt = (
   key: string,
   defaultValue?: number
-): [number | undefined, (v: number | undefined) => void] => {
+): [
+  number | undefined,
+  (v: number | undefined, opts?: SetHashParamOpts) => void
+] => {
   const [hashParamString, setHashParamString] = useHashParam(
     key,
     defaultValue ? defaultValue.toString() : undefined
   );
-  const [hashInt, setHashInt] = useState<number|undefined>(
+  const [hashInt, setHashInt] = useState<number | undefined>(
     hashParamString ? parseInt(hashParamString) : undefined
   );
 
@@ -22,11 +25,11 @@ export const useHashParamInt = (
   }, [key, hashParamString, setHashInt]);
 
   const setInt = useCallback(
-    (val: number | undefined) => {
+    (val: number | undefined, opts?: SetHashParamOpts) => {
       if (val) {
-        setHashParamString(val.toString());
+        setHashParamString(val.toString(), opts);
       } else {
-        setHashParamString(undefined);
+        setHashParamString(undefined, opts);
       }
     },
     [setHashParamString]
