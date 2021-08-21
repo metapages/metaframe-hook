@@ -9,10 +9,18 @@ Fork or copy this repo.
 - `vite` for fast building
 - `preact` for efficient, fast loading sites
 - `typescript` for type checking
+- `chakra-ui.com` for the UI framework
 - `just` for a single method to build/test/deploy/publish
 
-## Options
+## Github configuration
 
-Other (maintained) branches contain useful extras:
+Publish the web app to github pages:
 
-- chakra-ui.com UI framework: branch `OPTIONAL-ui-framework/chakra-ui.com`
+    just publish_ghpages
+
+Github configuration (once):
+
+ - ⚙️ `Settings`
+   - `Pages`
+     - `Source`:
+       - Branch: `gh-pages` 📁 `/docs`

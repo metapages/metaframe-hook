@@ -1,3 +1,5 @@
+# macos junk
+.DS_Store
 # local mkcert generated certificates for https
 .certs
 # never commit this
@@ -8,3 +10,7 @@
 dist
 # dependencies
 node_modules
+# just/config/startup temp files
+**/.tmp
+# gh-pages publish folder, ignored, but when publishing will force
+docs

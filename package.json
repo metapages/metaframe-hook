@@ -1,6 +1,6 @@
 {
-  "name": "metaframe-template",
-  "version": "0.1.0",
+  "name": "@metapages/metaframe-template-preact",
+  "version": "0.1.1",
   "private": false,
   "scripts": {
     "note": "echo 'use just. See README.md'"
@@ -18,7 +18,6 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.1.0",
-    "@rollup/plugin-typescript": "^8.2.3",
     "@types/node": "^12.20.10",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
