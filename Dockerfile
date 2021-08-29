@@ -1,5 +1,3 @@
-# FROM node:16.7.0-alpine3.14
-
 FROM denoland/deno:alpine-1.13.1
 
 RUN apk --no-cache --update add \
