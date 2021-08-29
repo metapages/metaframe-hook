@@ -26,7 +26,7 @@ That's it. Commands are self-documenting.
 
  - `just` will be the command runner, not `npm` (directly) or `make` or any other underlying tech specific command runner. `just` is the main entry point to control all aspects of the software lifecycle.
    - Prefer contextual error messages with calls to action over documentation that is not as close as possible to the code or commands. Distance creates indirection and staleness and barriers to keep updated.
- - You are building to publish at github pages with the url: https://<user_org>.github.io/<repo-name>/
+ - You are building to publish at github pages with the url: [https://<user_org>.github.io/<repo-name>/]
    - github pages 👆 comes with limited options for some config:
      - we build browser assets in `./docs` instead of `./dist` (typical default) so that publishing to github pages is less configuration
  - Operating this repository should be "easy" and enjoyable. It's a product of love and passion, I am hoping that you enjoy using at least just a little bit.
