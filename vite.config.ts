@@ -8,7 +8,7 @@ import preact from "@preact/preset-vite";
 const APP_FQDN = process.env.APP_FQDN || "metaframe1.dev";
 const APP_PORT = process.env.APP_PORT || "443";
 const INSIDE_CONTAINER = fs.existsSync('/.dockerenv');
-const PUBLISH_SUB_DIR = process.env.PUBLISH_SUB_DIR;
+const BUILD_SUB_DIR = process.env.BUILD_SUB_DIR;
 const fileKey = `./.certs/${APP_FQDN}-key.pem`;
 const fileCert = `./.certs/${APP_FQDN}.pem`;
 
@@ -19,8 +19,8 @@ const baseWebPath = packageName.split("/")[1];
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => ({
-  // For serving NOT at the base path e.g. with github pages: https://<name>.github.io/<repo>/
-  base: PUBLISH_SUB_DIR && PUBLISH_SUB_DIR !== "" ? `/${baseWebPath}/${PUBLISH_SUB_DIR}/` : `/${baseWebPath}/`,
+  // For serving NOT at the base path e.g. with github pages: https://<user_or_org>.github.io/<repo>/
+  base: BUILD_SUB_DIR && BUILD_SUB_DIR !== "" ? `/${baseWebPath}/${BUILD_SUB_DIR}/` : `/${baseWebPath}/`,
   resolve: {
     alias: {
       'react': 'preact/compat',
@@ -37,7 +37,7 @@ export default defineConfig(({ command, mode }) => ({
     preact(),
   ],
   build: {
-    outDir: `docs/${PUBLISH_SUB_DIR}`,
+    outDir: `docs/${BUILD_SUB_DIR}`,
     target: 'esnext',
     sourcemap: true,
     minify: mode === 'development' ? false : 'esbuild',

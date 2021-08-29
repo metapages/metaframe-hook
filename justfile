@@ -60,11 +60,11 @@ _dev_container: _ensure_npm_modules (_tsc "--build")
     VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}}
 
 # Build production brower assets into ./docs
-@build PUBLISH_SUB_DIR="": _ensure_npm_modules (_tsc "--build")
-    mkdir -p docs/{{PUBLISH_SUB_DIR}}
-    find docs/{{PUBLISH_SUB_DIR}} -maxdepth 1 -type f -exec rm "{}" \;
-    rm -rf docs/{{PUBLISH_SUB_DIR}}/assets
-    @PUBLISH_SUB_DIR={{PUBLISH_SUB_DIR}} {{vite}} build --mode=production
+@build BUILD_SUB_DIR="": _ensure_npm_modules (_tsc "--build")
+    mkdir -p docs/{{BUILD_SUB_DIR}}
+    find docs/{{BUILD_SUB_DIR}} -maxdepth 1 -type f -exec rm "{}" \;
+    rm -rf docs/{{BUILD_SUB_DIR}}/assets
+    @BUILD_SUB_DIR={{BUILD_SUB_DIR}} {{vite}} build --mode=production
 
 # Test. Currently testing is only building.
 @test: build
