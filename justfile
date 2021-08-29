@@ -1,5 +1,7 @@
+###############################################################
+# Minimal commands to develop, build, test, and deploy
+###############################################################
 # just docs: https://github.com/casey/just
-
 set shell                          := ["bash", "-c"]
 # E.g. 'my.app.com'. Some services e.g. auth need know the external endpoint for example OAuth
 # The root domain for this app, serving index.html
@@ -41,13 +43,13 @@ _help:
         just _docker;
     fi
 
-# Run the dev server. Opens the web app if outside the docker container.
+# Run the dev server. Opens the web app in browser.
 @dev:
     if [ -f /.dockerenv ]; then \
         just _dev_container; \
     else \
-        open https://${APP_FQDN}:${APP_PORT}; \
         just _mkcert; \
+        open https://${APP_FQDN}:${APP_PORT}; \
         just _docker just _dev_container; \
     fi
 
@@ -57,18 +59,17 @@ _dev_container: _ensure_npm_modules (_tsc "--build")
     echo "Browser development pointing to: ${APP_ORIGIN}"
     VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}}
 
-# build production brower assets
+# Build production brower assets into ./docs
 @build PUBLISH_SUB_DIR="": _ensure_npm_modules (_tsc "--build")
     mkdir -p docs/{{PUBLISH_SUB_DIR}}
     find docs/{{PUBLISH_SUB_DIR}} -maxdepth 1 -type f -exec rm "{}" \;
     rm -rf docs/{{PUBLISH_SUB_DIR}}/assets
     @PUBLISH_SUB_DIR={{PUBLISH_SUB_DIR}} {{vite}} build --mode=production
 
-# rebuild the client on changes, but do not serve
-watch:
-    watchexec -w src -w tsconfig.json -w package.json -w vite.config.ts -- just build
+# Test. Currently testing is only building.
+@test: build
 
-# Publish site to github -pages, including current ALL previous versions
+# Publish site to github-pages (includes all prev versions) https://pages.github.com/
 publish: _ensureGitPorcelain
     #!/usr/bin/env bash
     set -euo pipefail
@@ -94,7 +95,11 @@ publish: _ensureGitPorcelain
     echo -e "  - {{green}}Source{{normal}}"
     echo -e "    - {{green}}Branch{{normal}}: gh-pages 📁 /docs"
 
-# deletes .certs dist
+# Rebuild the client on changes, but do not serve
+watch:
+    watchexec -w src -w tsconfig.json -w package.json -w vite.config.ts -- just build
+
+# Deletes: .certs dist
 clean:
     rm -rf .certs dist
 
@@ -105,7 +110,6 @@ _tsc +args="":
 # DEV: generate TLS certs for HTTPS over localhost https://blog.filippo.io/mkcert-valid-https-certificates-for-localhost/
 _mkcert:
     #!/usr/bin/env bash
-    echo -e "🚪 Check local mkcert certificates and /etc/hosts with APP_FQDN=${APP_FQDN}"
     if [ -n "$CI" ]; then
         echo "CI=$CI ∴ skipping mkcert"
         exit 0
@@ -121,12 +125,13 @@ _mkcert:
     fi
     if ! cat /etc/hosts | grep "{{APP_FQDN}}" &> /dev/null; then
         echo -e "";
-        echo -e "💥Add to /etc/hosts: 'sudo vi /etc/hosts'💥";
+        echo -e "💥 Add below to /etc/hosts with this command: {{bold}}sudo vi /etc/hosts{{normal}} 💥";
         echo -e "";
-        echo -e "      {{bold}}127.0.0.1     {{APP_FQDN}}{{normal}}";
+        echo -e "{{bold}}127.0.0.1       {{APP_FQDN}}{{normal}}";
         echo -e "";
         exit 1;
     fi
+    echo -e "✅ Local mkcert certificates and /etc/hosts contains: 127.0.0.1       {{APP_FQDN}}"
 
 @_ensure_npm_modules:
     if [ ! -f "{{tsc}}" ]; then npm i; fi
@@ -143,6 +148,7 @@ _mkcert:
 @_docker +args="bash": _build_docker
     echo -e "🌱 Entering docker context: {{bold}}{{DOCKER_IMAGE_PREFIX}}:{{DOCKER_TAG}} from <cloud/>Dockerfile 🚪🚪{{normal}}"
     mkdir -p {{ROOT}}/.tmp
+    mkdir -p {{ROOT}}/.node_modules
     touch {{ROOT}}/.tmp/.bash_history
     export WORKSPACE=/repo && \
         docker run \
@@ -154,7 +160,23 @@ _mkcert:
             -e DOCKER_IMAGE_PREFIX={{DOCKER_IMAGE_PREFIX}} \
             -e HISTFILE=$WORKSPACE/.tmp/.bash_history \
             -e WORKSPACE=$WORKSPACE \
-            -v {{ROOT}}:$WORKSPACE \
+            $(if [ -f .env ]; then echo "-v {{ROOT}}/.env:$WORKSPACE/.env"; else echo ""; fi) \
+            -v {{ROOT}}/.certs:$WORKSPACE/.certs \
+            -v {{ROOT}}/.git:$WORKSPACE/.git \
+            -v {{ROOT}}/.gitignore:$WORKSPACE/.gitignore \
+            $(if [ -f .npmrc ]; then echo "-v {{ROOT}}/.npmrc:$WORKSPACE/.npmrc"; else echo ""; fi) \
+            -v {{ROOT}}/dist:$WORKSPACE/dist \
+            -v {{ROOT}}/docs:$WORKSPACE/docs \
+            -v {{ROOT}}/index.html:$WORKSPACE/index.html \
+            -v {{ROOT}}/justfile:$WORKSPACE/justfile \
+            -v {{ROOT}}/package-lock.json:$WORKSPACE/package-lock.json \
+            -v {{ROOT}}/package.json:$WORKSPACE/package.json \
+            -v {{ROOT}}/public:$WORKSPACE/public \
+            -v {{ROOT}}/README.md:$WORKSPACE/README.md \
+            -v {{ROOT}}/src:$WORKSPACE/src \
+            -v {{ROOT}}/test:$WORKSPACE/test \
+            -v {{ROOT}}/tsconfig.json:$WORKSPACE/tsconfig.json \
+            -v {{ROOT}}/vite.config.ts:$WORKSPACE/vite.config.ts \
             -v $HOME/.gitconfig:/root/.gitconfig \
             -v $HOME/.ssh:/root/.ssh \
             -p {{APP_PORT}}:{{APP_PORT}} \

@@ -40,4 +40,9 @@ RUN VERSION=1.14.1 ; \
 # Newer version of npm
 RUN npm i -g npm@7.20.3
 
-# ENTRYPOINT [ "/bin/bash" ]
+# /repo is also hard-coded in the justfile
+WORKDIR /repo
+# Install cached modules
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm i
