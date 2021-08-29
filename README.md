@@ -1,10 +1,10 @@
-# Metaframe template
+# [Metaframe](https://metapages.org/) template
 
-Fast creation and deployment of advanced metaframe websites.
+Fast creation and deployment of advanced [metaframe](https://metapages.org/) websites.
 
-Target audience: developers.
+Target audience: developers building tings for their [metapages](https://metapages.org/)
 
-Fork or copy this repo. It has everything you need to get a connectable website up and running and deployed.
+Fork or copy this repo. It has everything you need to get a connectable [metaframe](https://metapages.org/) website up and running and deployed.
 
 ## Setup/getting started
 
