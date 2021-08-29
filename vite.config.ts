@@ -1,3 +1,5 @@
+// Reference: https://miyauchi.dev/posts/vite-preact-typescript/
+
 import * as fs from "fs";
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
@@ -27,9 +29,9 @@ export default defineConfig(({ command, mode }) => ({
       '/@': resolve(__dirname, './src'),
     },
   },
-  esbuild: {
-    jsxFactory: 'h',
-    jsxFragment: 'Fragment',
+  jsx: {
+    factory: 'h',
+    fragment: 'Fragment',
   },
   plugins: [
     preact(),

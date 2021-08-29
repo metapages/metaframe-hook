@@ -2,9 +2,13 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src",
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
+    // I am assuming isolatedModules:true is a good default, but it's not clear
+    "isolatedModules": true,
+    // preact specific
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
@@ -15,6 +19,13 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "outDir": "./dist",
+    "paths": {
+      // avoid ../../../../foo type import paths
+      "/@/*": ["./*"],
+      // https://joshuatz.com/posts/2020/fixing-jsx-types-between-preact-and-react-libraries/
+      "react": ["node_modules/preact/compat/"],
+      "react-dom": ["node_modules/preact/compat/"],
+    },
     // https://stackoverflow.com/questions/51634361/how-to-force-tsc-to-ignore-node-modules-folder
     // true means it won't try to compile node_modules content (even tho already "excluded")
     "skipLibCheck": true,
@@ -27,6 +38,6 @@
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["vite/client"],
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "include": ["./src/**/*"]
 }
