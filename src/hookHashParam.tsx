@@ -53,7 +53,7 @@ export const useHashParam = (
       keys.sort();
       const hash = keys
         .map((key, i) => {
-          return `${key}=${paramHash[key]}`;
+          return `${key}=${encodeURI(paramHash[key])}`;
         })
         .join("&");
       // replace after the ? but keep before that
@@ -103,6 +103,9 @@ export const getHashParams = (): [string, Record<string, string>] => {
       .split("&")
       .filter((s) => s.length > 0)
       .map((s) => s.split("="))
+  );
+  Object.keys(hashObject).forEach(
+    (key) => (hashObject[key] = decodeURI(hashObject[key]))
   );
   return [preHashString, hashObject];
 };
