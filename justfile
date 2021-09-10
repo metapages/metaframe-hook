@@ -3,6 +3,8 @@
 ###############################################################
 # just docs: https://github.com/casey/just
 set shell                          := ["bash", "-c"]
+# Change this to anything else to NOT publish a seperate npm module
+NPM_PUBLISH                        := "true"
 # E.g. 'my.app.com'. Some services e.g. auth need know the external endpoint for example OAuth
 # The root domain for this app, serving index.html
 export APP_FQDN                    := env_var_or_default("APP_FQDN", "metaframe1.dev")
@@ -117,7 +119,12 @@ serve BUILD_SUB_DIR="": (_browser_assets_build BUILD_SUB_DIR)
     cd docs && ../node_modules/http-server/bin/http-server --cors '*' -o {{BUILD_SUB_DIR}} -a {{APP_FQDN}} -p {{APP_PORT}} --ssl --cert ../.certs/{{APP_FQDN}}.pem --key ../.certs/{{APP_FQDN}}-key.pem
 
 # Build npm package for publishing
-_npm_build: _ensure_npm_modules
+@_npm_build: _ensure_npm_modules
+    if [ "{{NPM_PUBLISH}}" = "true" ]; then \
+        just _npm_build_internal; \
+    fi
+
+_npm_build_internal:
     mkdir -p dist
     rm -rf dist/*
     {{tsc}} --noEmit false --project ./tsconfig.npm.json
@@ -130,6 +137,9 @@ _npm_version npmversionargs="patch":
 # If the npm version does not exist, publish the module
 _npm_publish: _require_NPM_TOKEN _npm_build
     #!/usr/bin/env bash
+    if [ "{{NPM_PUBLISH}}" != "true" ]; then
+        exit 0
+    fi
     set -euo pipefail
     if [ "$CI" != "true" ]; then
         # This check is here to prevent publishing if there are uncommitted changes, but this check does not work in CI environments
