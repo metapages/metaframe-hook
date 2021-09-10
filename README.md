@@ -2,14 +2,14 @@
 
 Fast creation and deployment of advanced [metaframe](https://metapages.org/) websites.
 
-Target audience: developers building tings for their [metapages](https://metapages.org/)
+Target audience: developers building [metaframes](https://metapages.org/) or any static website where having the core tools of development, building and publishing are packaged and require a small number of commands.
 
-Fork or copy this repo. It has everything you need to get a connectable [metaframe](https://metapages.org/) website up and running and deployed.
+It has everything you need to get a connectable [metaframe](https://metapages.org/) website up and running and deployed.
 
 ## Setup/getting started
 
 1) Install [just](https://github.com/casey/just#installation)
-2) Commands: `just`
+2) Type: `just`
 
 That's it. Commands are self-documenting.
 
