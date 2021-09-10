@@ -36,7 +36,7 @@ RUN VERSION=1.14.1 ; \
     rm -rf watchexec-*
 
 # Newer version of npm
-RUN npm i -g npm@7.20.3
+RUN npm i -g npm@7.21.1
 
 # /repo is also hard-coded in the justfile
 WORKDIR /repo

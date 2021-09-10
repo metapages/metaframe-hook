@@ -46,25 +46,21 @@ _help:
 # Run the dev server. Opens the web app in browser.
 @dev:
     if [ -f /.dockerenv ]; then \
-        just _dev_container; \
+        just _dev; \
     else \
         just _mkcert; \
         open https://${APP_FQDN}:${APP_PORT}; \
-        just _docker just _dev_container; \
+        just _docker just _dev; \
     fi
 
-_dev_container: _ensure_npm_modules (_tsc "--build")
+_dev: _ensure_npm_modules (_tsc "--build")
     #!/usr/bin/env bash
     APP_ORIGIN=https://${APP_FQDN}:${APP_PORT}
     echo "Browser development pointing to: ${APP_ORIGIN}"
     VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}}
 
 # Build production brower assets into ./docs
-@build BUILD_SUB_DIR="": _ensure_npm_modules (_tsc "--build")
-    mkdir -p docs/{{BUILD_SUB_DIR}}
-    find docs/{{BUILD_SUB_DIR}} -maxdepth 1 -type f -exec rm "{}" \;
-    rm -rf docs/{{BUILD_SUB_DIR}}/assets
-    @BUILD_SUB_DIR={{BUILD_SUB_DIR}} {{vite}} build --mode=production
+@build BUILD_SUB_DIR="": (_tsc "--build") (_browser_assets_build BUILD_SUB_DIR)
 
 # Test. Currently testing is only building.
 @test: build
@@ -103,8 +99,14 @@ watch:
 clean:
     rm -rf .certs dist
 
+_browser_assets_build BUILD_SUB_DIR="": _ensure_npm_modules
+    mkdir -p docs/{{BUILD_SUB_DIR}}
+    find docs/{{BUILD_SUB_DIR}} -maxdepth 1 -type f -exec rm "{}" \;
+    rm -rf docs/{{BUILD_SUB_DIR}}/assets
+    BUILD_SUB_DIR={{BUILD_SUB_DIR}} {{vite}} build --mode=production
+
 # compile typescript src, may or may not emit artifacts
-_tsc +args="":
+_tsc +args="": _ensure_npm_modules
     {{tsc}} {{args}}
 
 # DEV: generate TLS certs for HTTPS over localhost https://blog.filippo.io/mkcert-valid-https-certificates-for-localhost/
@@ -146,7 +148,7 @@ _mkcert:
 ####################################################################################
 # Hoist into a docker container with all require CLI tools installed
 @_docker +args="bash": _build_docker
-    echo -e "🌱 Entering docker context: {{bold}}{{DOCKER_IMAGE_PREFIX}}:{{DOCKER_TAG}} from <cloud/>Dockerfile 🚪🚪{{normal}}"
+    echo -e "🌱 Entering docker context: {{bold}}{{DOCKER_IMAGE_PREFIX}}:{{DOCKER_TAG}} from <repo/>Dockerfile 🚪🚪{{normal}}"
     mkdir -p {{ROOT}}/.tmp
     mkdir -p {{ROOT}}/.node_modules
     touch {{ROOT}}/.tmp/.bash_history
@@ -155,7 +157,7 @@ _mkcert:
             --rm \
             -ti \
             -e DOCKER_IMAGE_PREFIX=${DOCKER_IMAGE_PREFIX} \
-            -e PS1="< \w/> " \
+            -e PS1="< $(basename $PWD)/> " \
             -e PROMPT="<%/% > " \
             -e DOCKER_IMAGE_PREFIX={{DOCKER_IMAGE_PREFIX}} \
             -e HISTFILE=$WORKSPACE/.tmp/.bash_history \
