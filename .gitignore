@@ -1,16 +1,18 @@
 # macos junk
 .DS_Store
 # local mkcert generated certificates for https
-.certs
+/.certs
 # never commit this
-.env
+/.env
+# Do not commit credentials
+.npmrc
 # I'd like to commit this but probably not a good idea
-.vscode
+/.vscode
+# Used by docker hoisting system, keeps e.g. docker container bash history. See `justfile`
+/.tmp
 # compiled website
-dist
+/dist
 # dependencies
 node_modules
-# just/config/startup temp files
-**/.tmp
-# gh-pages publish folder, ignored, but when publishing will force
+# ignored on the main branch, force-added on the gh-pages branch
 docs
