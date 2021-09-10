@@ -1,3 +1,4 @@
+# deno not node because long-term deno will be used for all non-trivial scripting
 FROM denoland/deno:alpine-1.13.1
 
 RUN apk --no-cache --update add \
@@ -35,8 +36,12 @@ RUN VERSION=1.14.1 ; \
     tar xvf watchexec-$VERSION-i686-unknown-linux-musl.tar.xz watchexec-$VERSION-i686-unknown-linux-musl/watchexec -C /usr/bin/ --strip-components=1 && \
     rm -rf watchexec-*
 
+# git on unconfigured systems requires these set for some operations
+RUN git config --global user.email "ci@rob.ot"
+RUN git config --global user.name "robot"
+
 # Newer version of npm
-RUN npm i -g npm@7.21.1
+RUN /usr/bin/npm i -g npm@7.21.1
 
 # /repo is also hard-coded in the justfile
 WORKDIR /repo
@@ -44,3 +49,6 @@ WORKDIR /repo
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm i
+
+# Add user aliases to the shell if available
+RUN echo "if [ -f /repo/.tmp/.aliases ]; then source /repo/.tmp/.aliases; fi" >> /root/.bashrc
