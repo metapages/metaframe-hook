@@ -6,6 +6,10 @@ Target audience: developers building [metaframes](https://metapages.org/) or any
 
 It has everything you need to get a connectable [metaframe](https://metapages.org/) website up and running and deployed.
 
+## Optional feature branches
+
+ - `OPTIONAL-npm-publish`: additionally publish a module of `./src/lib` to npm
+
 ## Setup/getting started
 
 1) Install [just](https://github.com/casey/just#installation)
