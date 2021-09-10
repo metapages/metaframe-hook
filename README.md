@@ -6,9 +6,9 @@ Target audience: developers building [metaframes](https://metapages.org/) or any
 
 It has everything you need to get a connectable [metaframe](https://metapages.org/) website up and running and deployed.
 
-## Optional feature branches
+## Optional features
 
- - `OPTIONAL-npm-publish`: additionally publish a module of `./src/lib` to npm
+ - `justfile`: set `NPM_PUBLISH` to anything except `true` to disable publishing source code in `./src/lib` to npm
 
 ## Setup/getting started
 
