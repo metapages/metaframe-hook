@@ -1,6 +1,6 @@
 // Reference: https://miyauchi.dev/posts/vite-preact-typescript/
 
-import * as fs from "fs";
+import fs from "fs";
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
@@ -30,6 +30,7 @@ export default defineConfig(({ command, mode }) => ({
     alias: {
       react: "preact/compat",
       "react-dom": "preact/compat",
+      "react/jsx-runtime": "preact/jsx-runtime",
       "react-dom/test-utils": "preact/test-utils",
       "/@": resolve(__dirname, "./src"),
     },
@@ -38,7 +39,8 @@ export default defineConfig(({ command, mode }) => ({
     factory: "h",
     fragment: "Fragment",
   },
-  plugins: [preact()],
+  // this is really stupid this should not be necessary
+  plugins: [(preact as any).default()],
   build: {
     outDir: `docs/${BUILD_SUB_DIR}`,
     target: "esnext",
@@ -46,25 +48,16 @@ export default defineConfig(({ command, mode }) => ({
     minify: mode === "development" ? false : "esbuild",
     emptyOutDir: false,
   },
-  server:
-    mode === "development"
-      ? {
-          open: INSIDE_CONTAINER ? undefined : "/",
-          host: INSIDE_CONTAINER ? "0.0.0.0" : APP_FQDN,
-          port: parseInt(fs.existsSync(fileKey) ? APP_PORT : "8000"),
-          https:
-            fs.existsSync(fileKey) && fs.existsSync(fileCert)
-              ? {
-                  key: fs.readFileSync(fileKey),
-                  cert: fs.readFileSync(fileCert),
-                }
-              : undefined,
-        }
-      : {
-          // glitch.com default
-          strictPort: true,
-          hmr: {
-            port: 443, // Run the websocket server on the SSL port
-          },
-        },
+  server: {
+    open: INSIDE_CONTAINER ? undefined : "/",
+    host: INSIDE_CONTAINER ? "0.0.0.0" : APP_FQDN,
+    port: parseInt(fs.existsSync(fileKey) ? APP_PORT : "8000"),
+    https:
+      fs.existsSync(fileKey) && fs.existsSync(fileCert)
+        ? {
+            key: fs.readFileSync(fileKey),
+            cert: fs.readFileSync(fileCert),
+          }
+        : undefined,
+  },
 }));

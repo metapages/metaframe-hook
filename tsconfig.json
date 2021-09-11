@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
-    // I am assuming isolatedModules:true is a good default, but it's not clear
+    // vite recommends this
     "isolatedModules": true,
     // preact specific
     "jsx": "preserve",

@@ -7,7 +7,8 @@ RUN apk --no-cache --update add \
     git \
     jq \
     npm \
-    openssh
+    openssh \
+    ripgrep
 
 # Needs edge repo
 RUN apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
