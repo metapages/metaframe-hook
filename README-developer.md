@@ -6,16 +6,26 @@ Target audience: developers building [metaframes](https://metapages.org/) or any
 
 It has everything you need to get a connectable [metaframe](https://metapages.org/) website up and running and deployed.
 
-## Optional features
+## Fork and modify
 
- - `justfile`: set `NPM_PUBLISH` to anything except `true` to disable publishing source code in `./src/lib` to npm
+1) Fork this repo
+2) Change in `package.json`:
+   - `name` to your npm module name
+     - This repo keeps the npm module name in `package.json` close to the github repo name:
+       - npm: `@metapages/metaframe-template-preact`
+       - git: `metapages/metaframe-template-preact`
+   - `repository.url`
+   - `homepage`
+   - `version`: set this to e.g. `0.0.` or whatever you need
+3) Meet [host requirements](#host-requirements)
+4) Type `just` and go from there
 
-## Setup/getting started
+## Host requirements
 
-1) Install [just](https://github.com/casey/just#installation)
-2) Type: `just`
+  - [just](https://github.com/casey/just#installation)
+  - [docker](https://www.docker.com/products/docker-desktop)
 
-That's it. Commands are self-documenting.
+That's it. Commands are self-documenting: just type `just`
 
 ## Features
 
