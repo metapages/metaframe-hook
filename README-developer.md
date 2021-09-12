@@ -18,7 +18,8 @@ It has everything you need to get a connectable [metaframe](https://metapages.or
    - `homepage`
    - `version`: set this to e.g. `0.0.` or whatever you need
 3) Meet [host requirements](#host-requirements)
-4) Type `just` and go from there
+4) Maybe change `APP_FQDN` and `APP_PORT` in `.env` (create if needed) to avoid origin collisions
+5) Type `just` and go from there
 
 ## Host requirements
 

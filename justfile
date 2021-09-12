@@ -46,17 +46,20 @@ _help:
     fi
 
 # Run the dev server. Opens the web app in browser.
-@dev:
-    if [ -f /.dockerenv ]; then \
-        just _dev; \
-    else \
-        just _mkcert; \
-        open https://${APP_FQDN}:${APP_PORT}; \
-        just _docker just _dev; \
+dev:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -f /.dockerenv ]; then
+        just _dev;
+    else
+        just _mkcert;
+        open https://${APP_FQDN}:${APP_PORT};
+        just _docker just _dev;
     fi
 
 _dev: _ensure_npm_modules (_tsc "--build")
     #!/usr/bin/env bash
+    set -euo pipefail
     APP_ORIGIN=https://${APP_FQDN}:${APP_PORT}
     echo "Browser development pointing to: ${APP_ORIGIN}"
     VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}} --clearScreen false
