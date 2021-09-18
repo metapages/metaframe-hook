@@ -1,6 +1,6 @@
 {
   "name": "@metapages/metaframe-template-preact",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/metapages/metaframe-template-preact"
@@ -34,7 +34,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/react": "^17.0.2",
     "typescript": "^4.1.5",
-    "vite": "^2.4.3"
+    "vite": "^2.5.0"
   },
   "browserslist": {
     "production": [

@@ -223,10 +223,6 @@ _githubpages_publish: _ensureGitPorcelain
     #!/usr/bin/env bash
     set -euo pipefail
 
-    # Build first
-    just _browser_assets_build ./v$(cat package.json | jq -r .version)
-    just _browser_assets_build
-
     # Mostly CURRENT_BRANCH should be main, but maybe you are testing on a different branch
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     if [ -z "$(git branch --list gh-pages)" ]; then
@@ -234,6 +230,12 @@ _githubpages_publish: _ensureGitPorcelain
     fi
 
     git checkout gh-pages
+
+    git rebase --strategy recursive --strategy-option theirs main
+
+    # Then build
+    just _browser_assets_build ./v$(cat package.json | jq -r .version)
+    just _browser_assets_build
 
     # Now commit and push
     git add --all --force docs
