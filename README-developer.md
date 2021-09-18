@@ -12,8 +12,8 @@ It has everything you need to get a connectable [metaframe](https://metapages.or
 2) Change in `package.json`:
    - `name` to your npm module name
      - This repo keeps the npm module name in `package.json` close to the github repo name:
-       - npm: `@metapages/metaframe-template-preact`
-       - git: `metapages/metaframe-template-preact`
+       - npm: `@metapages/metaframe-...?`
+       - git: `metapages/metaframe-...?`
    - `repository.url`
    - `homepage`
    - `version`: set this to e.g. `0.0.` or whatever you need
