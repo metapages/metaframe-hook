@@ -14,6 +14,7 @@ import {
   Input,
   Select,
   HStack,
+  Spacer,
   Switch,
   Text,
 } from "@chakra-ui/react";
@@ -213,10 +214,9 @@ const OptionsMenu: FunctionalComponent<{
                 <GridItem rowSpan={1} colSpan={12}></GridItem>
                 <GridItem rowSpan={1} colSpan={12}></GridItem>
                 <GridItem rowSpan={1} colSpan={12}></GridItem>
-                <GridItem rowSpan={1} colSpan={10}></GridItem>
-
-                <GridItem rowSpan={0} colSpan={2}>
-                  <HStack spacing={2} justify="flex-end" direction="row">
+                <GridItem rowSpan={1} colSpan={12}>
+                  <HStack spacing={2} direction="row">
+                    <Spacer />
                     {/*
                       // @ts-ignore */}
                     <IconButton
