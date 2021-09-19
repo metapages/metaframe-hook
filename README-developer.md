@@ -8,7 +8,16 @@ It has everything you need to get a connectable [metaframe](https://metapages.or
 
 ## Fork and modify
 
-1) Fork this repo
+1) Fork OR Create new repository
+   - Fork
+   - Create new repository
+      1) Clone the new repository and go there in the terminal
+      2) `git remote add upstream git@github.com:metapages/metaframe-template-preact.git`
+      3) `git fetch upstream`
+      4) `git checkout -b upstream upstream/main`
+      5) `git branch -d main`
+      6) `git checkout -b main`
+      7) `git push -u origin main`
 2) Change in `package.json`:
    - `name` to your npm module name
      - This repo keeps the npm module name in `package.json` close to the github repo name:
@@ -20,6 +29,15 @@ It has everything you need to get a connectable [metaframe](https://metapages.or
 3) Meet [host requirements](#host-requirements)
 4) Maybe change `APP_FQDN` and `APP_PORT` in `.env` (create if needed) to avoid origin collisions
 5) Type `just` and go from there
+
+**Getting upstream improvements:**
+
+1) `git checkout upstream`
+2) `git pull`
+3) `git checkout main`
+4) `git merge upstream`
+
+You'll have to manually fix the differences where they conflict (they will).
 
 ## Host requirements
 
