@@ -1,5 +1,5 @@
 import { FunctionalComponent } from "preact";
-import { Home } from "./routes/home";
+import { Route as Home } from "./routes/home";
 
 export const App: FunctionalComponent = () => {
   return <Home />;
