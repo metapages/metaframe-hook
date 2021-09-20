@@ -28,8 +28,33 @@ export type Option = {
   default?: string | boolean | number;
   type?: OptionType; // defaults to string
   options?: string[];
+  // if the type is "option" and there are suboptions then
+  // the suboptions are added to all options
+  suboptions?: { [name in string]: Option[] };
   validator?: (val: string | boolean | number) => string | undefined; // undefined == 👍, string is an error message
   map?: (val: string | boolean | number) => any; // convert value to proper type
+};
+
+const useOptions = (options: Option[], chosenOptions?: GenericOptions) => {
+  const [optionsState, setOptionsState] = useState<Option[]>(options);
+
+  useEffect(() => {
+    let newOptions = options.concat([]);
+    options.forEach((option) => {
+      if (option.type === "option" && option.suboptions && chosenOptions) {
+        Object.keys(chosenOptions).forEach((key) => {
+          const val = chosenOptions[key] as string | undefined;
+          if (val && option?.suboptions?.[val]) {
+            newOptions = newOptions.concat(option.suboptions[val]);
+          }
+        });
+      }
+    });
+
+    setOptionsState(newOptions);
+  }, [chosenOptions, setOptionsState, options]);
+
+  return [optionsState];
 };
 
 export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[], hashkey?:string }> = ({
@@ -57,7 +82,7 @@ export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[], hashkey
   );
 };
 
-type GenericOptions = Record<string, string | boolean | number>;
+export type GenericOptions = Record<string, string | boolean | number>;
 
 const OptionsMenu: FunctionalComponent<{
   isOpen: boolean;
@@ -80,13 +105,27 @@ const OptionsMenu: FunctionalComponent<{
   const [localOptions, setLocalOptions] = useState<GenericOptions>(
     optionsInHashParams || {}
   );
-  const [errors, setErrors] =
-    useState<Record<string, string> | undefined>(undefined);
+
+  const [filteredOptions] = useOptions(options, localOptions);
+
+  const [errors, setErrors] = useState<Record<string, string> | undefined>(
+    undefined
+  );
 
   const handleOnChange = useCallback(
     (event: any) => {
       const { name, value } = event.target as HTMLInputElement;
-      const option = options.find((o) => o.name === name) as Option; // assume we always find one since we configured it from options
+      let flattenedOptions = options.concat([]);
+      options.forEach((o) => {
+        if (o.suboptions) {
+          const arrays = Object.values(o.suboptions);
+          arrays.forEach(
+            (oo) => (flattenedOptions = flattenedOptions.concat(oo))
+          );
+        }
+      });
+
+      const option = flattenedOptions.find((o) => o.name === name) as Option; // assume we always find one since we configured it from options
       // save boolean true as "1"
       if (!option) {
         console.error(`No option found for name=${name}`);
@@ -127,7 +166,9 @@ const OptionsMenu: FunctionalComponent<{
     // now maybe map to other values
     const convertedOptions: GenericOptions = {};
     Object.keys(localOptions).forEach((key) => {
-      const option: Option | undefined = options.find((o) => o.name === key);
+      const option: Option | undefined = filteredOptions.find(
+        (o) => o.name === key
+      );
       if (option) {
         if (option.map) {
           convertedOptions[key] = option.map(localOptions[key]);
@@ -153,6 +194,7 @@ const OptionsMenu: FunctionalComponent<{
     isOpen,
     options,
     localOptions,
+    filteredOptions,
     setOptionsInHashParams,
     setErrors,
   ]);
@@ -187,7 +229,7 @@ const OptionsMenu: FunctionalComponent<{
               overflow="hidden"
             >
               <Grid templateColumns="repeat(12, 1fr)" gap={6}>
-                {options.map((option) => (
+                {filteredOptions.map((option) => (
                   <>
                     <GridItem rowSpan={1} colSpan={4}>
                       <Box
