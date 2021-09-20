@@ -87,7 +87,7 @@ export const ButtonOptionsMenu: FunctionalComponent<{
   );
 };
 
-export type GenericOptions = Record<string, string | boolean | number>;
+export type GenericOptions = Record<string, string | boolean | number | undefined>;
 
 const OptionsMenu: FunctionalComponent<{
   isOpen: boolean;
@@ -138,6 +138,8 @@ const OptionsMenu: FunctionalComponent<{
       }
       if (option.type === "boolean") {
         setLocalOptions({ ...localOptions, [name]: value === "1" });
+      // } else if (option.type === "number") {
+      //   setLocalOptions({ ...localOptions, [name]: value !== undefined && value !== "" ? parseFloat(value) : undefined });
       } else {
         setLocalOptions({ ...localOptions, [name]: value });
       }
@@ -174,15 +176,21 @@ const OptionsMenu: FunctionalComponent<{
       const option: Option | undefined = filteredOptions.find(
         (o) => o.name === key
       );
-      if (option) {
+      if (localOptions[key] === undefined) {
+        return;
+      }
+      if (option !== undefined) {
         if (option.map) {
-          convertedOptions[key] = option.map(localOptions[key]);
+          // user supplied mapping function from hash param value to user converted value
+          convertedOptions[key] = option.map(localOptions[key]!);
         } else {
           if (option.type === "boolean") {
             convertedOptions[key] =
               localOptions[key] === true ||
               localOptions[key] === "1" ||
               localOptions[key] === "true";
+          } else if (option.type === "number") {
+            convertedOptions[key] = typeof(localOptions[key]) === "string" ? parseFloat(localOptions[key] as string) : localOptions[key];
           } else {
             convertedOptions[key] = localOptions[key];
           }
