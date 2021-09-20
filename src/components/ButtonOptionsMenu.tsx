@@ -57,10 +57,10 @@ const useOptions = (options: Option[], chosenOptions?: GenericOptions) => {
   return [optionsState];
 };
 
-export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[], hashkey?:string }> = ({
-  hashkey,
-  options,
-}) => {
+export const ButtonOptionsMenu: FunctionalComponent<{
+  options: Option[];
+  hashkey?: string;
+}> = ({ hashkey, options }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const onClick = useCallback(() => {
@@ -77,7 +77,12 @@ export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[], hashkey
         size="lg"
         onClick={onClick}
       />
-      <OptionsMenu hashkey={hashkey} isOpen={open} setOpen={setOpen} options={options} />
+      <OptionsMenu
+        hashkey={hashkey}
+        isOpen={open}
+        setOpen={setOpen}
+        options={options}
+      />
     </>
   );
 };
@@ -88,7 +93,7 @@ const OptionsMenu: FunctionalComponent<{
   isOpen: boolean;
   setOpen: (open: boolean) => void;
   options: Option[];
-  hashkey?:string;
+  hashkey?: string;
 }> = ({ hashkey, isOpen, setOpen, options }) => {
   // isOpen = false; // for debugging/developing
 
