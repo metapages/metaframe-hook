@@ -25,7 +25,7 @@ It has everything you need to get a connectable [metaframe](https://metapages.or
        - git: `metapages/metaframe-...?`
    - `repository.url`
    - `homepage`
-   - `version`: set this to e.g. `0.0.` or whatever you need
+   - `version`: set this to e.g. `0.1.0` or whatever you need
 3) Change in `index.html`: `<title> ... </title>`
 4) Meet [host requirements](#host-requirements)
 5) Maybe change `APP_FQDN` and `APP_PORT` in `.env` (create if needed) to avoid origin collisions
