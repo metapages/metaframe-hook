@@ -20,19 +20,20 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon, SettingsIcon } from "@chakra-ui/icons";
 
-export type OptionType = "string" | "boolean" | "option";
+export type OptionType = "string" | "boolean" | "option" | "number";
 
 export type Option = {
   name: string;
   displayName: string;
-  default?: string | boolean;
+  default?: string | boolean | number;
   type?: OptionType; // defaults to string
   options?: string[];
-  validator?: (val: string | boolean) => string | undefined; // undefined == 👍, string is an error message
-  map?: (val: string | boolean) => any; // convert value to proper type
+  validator?: (val: string | boolean | number) => string | undefined; // undefined == 👍, string is an error message
+  map?: (val: string | boolean | number) => any; // convert value to proper type
 };
 
-export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[] }> = ({
+export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[], hashkey?:string }> = ({
+  hashkey,
   options,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -51,23 +52,24 @@ export const ButtonOptionsMenu: FunctionalComponent<{ options: Option[] }> = ({
         size="lg"
         onClick={onClick}
       />
-      <OptionsMenu isOpen={open} setOpen={setOpen} options={options} />
+      <OptionsMenu hashkey={hashkey} isOpen={open} setOpen={setOpen} options={options} />
     </>
   );
 };
 
-type GenericOptions = Record<string, string | boolean>;
+type GenericOptions = Record<string, string | boolean | number>;
 
 const OptionsMenu: FunctionalComponent<{
   isOpen: boolean;
   setOpen: (open: boolean) => void;
   options: Option[];
-}> = ({ isOpen, setOpen, options }) => {
-  // isOpen = true; // for debugging/developing
+  hashkey?:string;
+}> = ({ hashkey, isOpen, setOpen, options }) => {
+  // isOpen = false; // for debugging/developing
 
   const [optionsInHashParams, setOptionsInHashParams] =
     useHashParamJson<GenericOptions>(
-      "options",
+      hashkey ? hashkey : "options",
       Object.fromEntries(
         options
           .filter((o) => o.default)
