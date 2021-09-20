@@ -40,6 +40,7 @@ _help:
         echo -e ""
         echo -e "    Github  URL 🔗 {{green}}$(cat package.json | jq -r '.repository.url'){{normal}}"
         echo -e "    Publish URL 🔗 {{green}}https://$(cat package.json | jq -r '.name' | sd '/.*' '' | sd '@' '').github.io/{{PACKAGE_NAME_SHORT}}/{{normal}}"
+        echo -e "    Develop URL 🔗 {{green}}https://{{APP_FQDN}}:{{APP_PORT}}/{{normal}}"
         echo -e ""
     else
         just _docker;
@@ -68,7 +69,7 @@ _dev: _ensure_npm_modules (_tsc "--build")
 build: (_tsc "--build") _browser_assets_build _npm_build
 
 # Test: currently bare minimum: only building. Need proper test harness.
-@test: _npm_build
+@test: (_tsc "--build") _npm_build
 
 # Publish to npm and github pages.
 publish npmversionargs="patch": _ensureGitPorcelain test (_npm_version npmversionargs) _npm_publish _githubpages_publish
@@ -114,7 +115,7 @@ clean:
     rm -rf .certs dist
 
 # Rebuild the client on changes, but do not serve
-watch BUILD_SUB_DIR="./":
+watch BUILD_SUB_DIR="":
     watchexec -w src -w tsconfig.json -w package.json -w vite.config.ts -- just _npm_build
 
 # Watch and serve browser client. Can't use vite to serve: https://github.com/vitejs/vite/issues/2754
@@ -178,7 +179,7 @@ _npm_publish: _require_NPM_TOKEN _npm_build
 _browser_assets_build BUILD_SUB_DIR="": _ensure_npm_modules
     mkdir -p docs/{{BUILD_SUB_DIR}}
     find docs/{{BUILD_SUB_DIR}} -maxdepth 1 -type f -exec rm "{}" \;
-    rm -rf docs/{{BUILD_SUB_DIR}}/assets
+    rm -rf $(echo "docs/{{BUILD_SUB_DIR}}/assets" | sed s#//*#/#g)
     BUILD_SUB_DIR={{BUILD_SUB_DIR}} {{vite}} build --mode=production
 
 # compile typescript src, may or may not emit artifacts
@@ -231,7 +232,7 @@ _githubpages_publish: _ensureGitPorcelain
 
     git checkout gh-pages
 
-    git rebase --strategy recursive --strategy-option theirs main
+    git rebase --strategy recursive --strategy-option theirs ${CURRENT_BRANCH}
 
     # Then build
     just _browser_assets_build ./v$(cat package.json | jq -r .version)
