@@ -118,7 +118,7 @@ _npm_build_internal:
     mkdir -p dist
     rm -rf dist/*
     {{tsc}}  src/lib/index.ts --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist
-    {{vite}} --config vite.config.npm.ts build --mode=production
+    {{vite}} build --mode=production
     @# {{tsc}} --noEmit false --project ./tsconfig.npm.json
     @echo "  ✅ npm build"
 

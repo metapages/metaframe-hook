@@ -1,4 +1,3 @@
-// Can we export a react AND preact compatible module?
 import React, { useContext, useEffect, useState, createContext } from "react";
 import { Metaframe, MetaframeInputMap } from "@metapages/metapage";
 
