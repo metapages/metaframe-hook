@@ -20,9 +20,15 @@ export const getHashParamValue = (
   key: string
 ): string | undefined => {
   const urlBlob = new URL(url);
-  const hashSearchParams = urlBlob.searchParams;
-  if (hashSearchParams.has(key)) {
-    const value = hashSearchParams.get("definition");
+  let hashString = urlBlob.hash;
+  const queryIndex = hashString.indexOf("?");
+  if (queryIndex === -1) {
+    return;
+  }
+  hashString = hashString.substr(queryIndex + 1);
+  const params = new URLSearchParams(hashString);
+  if (params.has(key)) {
+    const value = params.get(key);
     if (value) {
       return value;
     }
@@ -36,7 +42,7 @@ export const getHashParamObject = (
 ): any | undefined => {
   const valueString = getHashParamValue(url, key);
   if (valueString && valueString !== "") {
-    const value = JSON.parse(valueString);
+    const value = JSON.parse(atob(valueString));
     return value;
   }
   return;
