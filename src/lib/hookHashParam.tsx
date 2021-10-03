@@ -18,7 +18,7 @@ export const useHashParam = (
   );
 
   useEffect(() => {
-    const onHashChange = (_: HashChangeEvent) => {
+    const onHashChange = (_: Event) => {
       const paramHash = getHashParams()[1];
       setHashParamInternal(paramHash[key]);
     };
