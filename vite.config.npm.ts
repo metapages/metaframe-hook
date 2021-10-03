@@ -15,16 +15,8 @@ const packageName = JSON.parse(
 export default defineConfig(({ command, mode }) => ({
   resolve: {
     alias: {
-      react: "preact/compat",
-      "react-dom": "preact/compat",
-      "react/jsx-runtime": "preact/jsx-runtime",
-      "react-dom/test-utils": "preact/test-utils",
       "/@": path.resolve(__dirname, "./src"),
     },
-  },
-  jsx: {
-    factory: "h",
-    fragment: "Fragment",
   },
   // this is really stupid this should not be necessary
   plugins: [(preact as any).default()],
