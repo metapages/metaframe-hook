@@ -117,7 +117,8 @@ serve BUILD_SUB_DIR="": (_browser_assets_build BUILD_SUB_DIR)
 _npm_build_internal:
     mkdir -p dist
     rm -rf dist/*
-    {{tsc}} --noEmit false --project ./tsconfig.npm.json
+    {{vite}} --config vite.config.npm.ts build --mode=production
+    @# {{tsc}} --noEmit false --project ./tsconfig.npm.json
     @echo "  ✅ npm build"
 
 # bumps version, commits change, git tags
