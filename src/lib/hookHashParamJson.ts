@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import stringify from "fast-json-stable-stringify";
 import { useHashParam, SetHashParamOpts } from "./hookHashParam";
+import { blobFromBase64String, blobToBase64String } from "./util";
 
 /**
  * Hook for getting/setting a hash param JSON blob (safely encoded)
  */
-export const useHashParamJson = <T,>(
+export const useHashParamJson = <T>(
   key: string,
   defaultBlob?: T
 ): [T | undefined, (v: T | undefined, opts?: SetHashParamOpts) => void] => {
@@ -35,20 +35,4 @@ export const useHashParamJson = <T,>(
   );
 
   return [hashBlob, setJsonBlob];
-};
-
-export const blobToBase64String = (blob: Record<string, any>) => {
-  return btoa(stringify(blob));
-};
-
-export const blobFromBase64String = (value: string | undefined) => {
-  if (value && value.length > 0) {
-    try {
-      const blob = JSON.parse(atob(value));
-      return blob;
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  return undefined;
 };
