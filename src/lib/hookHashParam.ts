@@ -98,6 +98,7 @@ export const getHashParams = (): [string, Record<string, string>] => {
   }
   const preHashString = hashString.substr(0, queryIndex);
   hashString = hashString.substr(queryIndex + 1);
+  // @ts-ignore
   const hashObject = Object.fromEntries(
     hashString
       .split("&")

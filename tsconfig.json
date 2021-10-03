@@ -6,16 +6,16 @@
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
+    "emitDeclarationOnly": true,
     // vite recommends this
     "isolatedModules": true,
     // preact specific
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
+    "lib": ["ES2020", "ESNext"],
+    "module": "ES2020",
     "moduleResolution": "node",
-    "noEmit": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "outDir": "./dist",
@@ -24,7 +24,7 @@
       "/@/*": ["./*"],
       // https://joshuatz.com/posts/2020/fixing-jsx-types-between-preact-and-react-libraries/
       "react": ["node_modules/preact/compat/"],
-      "react-dom": ["node_modules/preact/compat/"],
+      "react-dom": ["node_modules/preact/compat/"]
     },
     // https://stackoverflow.com/questions/51634361/how-to-force-tsc-to-ignore-node-modules-folder
     // true means it won't try to compile node_modules content (even tho already "excluded")
@@ -36,8 +36,8 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["vite/client"],
+    "types": ["vite/client"]
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["./src/**/*"]
+  "include": ["./src/lib/*"]
 }

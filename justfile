@@ -66,10 +66,10 @@ _dev: _ensure_npm_modules (_tsc "--build")
     VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}} --clearScreen false
 
 # Build the browser client static assets and npm module
-build: (_tsc "--build") _npm_build
+build: _npm_build
 
 # Test: currently bare minimum: only building. Need proper test harness.
-@test: (_tsc "--build") _npm_build
+@test: _npm_build
 
 # Publish to npm and github pages.
 publish npmversionargs="patch": _ensureGitPorcelain test (_npm_version npmversionargs) _npm_publish
@@ -117,6 +117,7 @@ serve BUILD_SUB_DIR="": (_browser_assets_build BUILD_SUB_DIR)
 _npm_build_internal:
     mkdir -p dist
     rm -rf dist/*
+    {{tsc}}  src/lib/index.ts --declaration --emitDeclarationOnly --jsx react --esModuleInterop --outDir dist
     {{vite}} --config vite.config.npm.ts build --mode=production
     @# {{tsc}} --noEmit false --project ./tsconfig.npm.json
     @echo "  ✅ npm build"
