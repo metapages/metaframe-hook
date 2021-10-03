@@ -1,5 +1,3 @@
-// Reference: https://miyauchi.dev/posts/vite-preact-typescript/
-
 import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
@@ -38,5 +36,6 @@ export default defineConfig(({ command, mode }) => ({
     sourcemap: true,
     minify: mode === "development" ? false : "esbuild",
     emptyOutDir: false,
+    target: 'modules',
   },
 }));
