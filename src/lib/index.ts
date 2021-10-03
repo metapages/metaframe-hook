@@ -30,10 +30,10 @@ export const getHashParamValue = (
   return;
 };
 
-export const getHashParamObject = <T>(
+export const getHashParamObject = (
   url: string,
   key: string
-): T | undefined => {
+): any | undefined => {
   const valueString = getHashParamValue(url, key);
   if (valueString && valueString !== "") {
     const value = JSON.parse(valueString);
