@@ -3,7 +3,6 @@
 import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
-import preact from "@preact/preset-vite";
 
 // Get the github pages path e.g. if served from https://<name>.github.io/<repo>/
 // then we need to pull out "<repo>"
@@ -18,8 +17,6 @@ export default defineConfig(({ command, mode }) => ({
       "/@": path.resolve(__dirname, "./src"),
     },
   },
-  // this is really stupid this should not be necessary
-  plugins: [(preact as any).default()],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/lib/index.ts'),
