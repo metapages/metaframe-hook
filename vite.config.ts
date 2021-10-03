@@ -24,12 +24,14 @@ export default defineConfig(({ command, mode }) => ({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ["@metapages/metapage"],
+      external: ["@metapages/metapage", "react"],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {
-          metapages: '@metapages/metapage'
+          metapages: "@metapages/metapage",
+          react: "React",
+          "react-dom": "ReactDOM",
         }
       }
     },
