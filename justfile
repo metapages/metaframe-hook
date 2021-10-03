@@ -39,7 +39,7 @@ _help:
         just --list --unsorted --list-heading $'🌱 Commands:\n\n'
         echo -e ""
         echo -e "    Github  URL 🔗 {{green}}$(cat package.json | jq -r '.repository.url'){{normal}}"
-        echo -e "    Publish URL 🔗 {{green}}https://$(cat package.json | jq -r '.name' | sd '/.*' '' | sd '@' '').github.io/{{PACKAGE_NAME_SHORT}}/{{normal}}"
+        echo -e "    Publish URL 🔗 {{green}}https://www.npmjs.com/package/$(cat package.json | jq -r '.name'){{normal}}"
         echo -e "    Develop URL 🔗 {{green}}https://{{APP_FQDN}}:{{APP_PORT}}/{{normal}}"
         echo -e ""
     else
@@ -66,13 +66,13 @@ _dev: _ensure_npm_modules (_tsc "--build")
     VITE_APP_ORIGIN=${APP_ORIGIN} {{vite}} --clearScreen false
 
 # Build the browser client static assets and npm module
-build: (_tsc "--build") _browser_assets_build _npm_build
+build: (_tsc "--build") _npm_build
 
 # Test: currently bare minimum: only building. Need proper test harness.
 @test: (_tsc "--build") _npm_build
 
 # Publish to npm and github pages.
-publish npmversionargs="patch": _ensureGitPorcelain test (_npm_version npmversionargs) _npm_publish _githubpages_publish
+publish npmversionargs="patch": _ensureGitPorcelain test (_npm_version npmversionargs) _npm_publish
     @# Push the tags up
     git push origin v$(cat package.json | jq -r '.version')
 
@@ -93,20 +93,6 @@ npm command="":
     else
         echo ""
         echo "👉 just npm [ build | version | publish ]"
-        echo ""
-    fi
-
-# GitHub Pages commands: publish (more coming)
-ghpages command="":
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    if [ "{{command}}" = "publish" ];
-    then
-        just _githubpages_publish
-    else
-        echo ""
-        echo "👉 just ghpages [ publish ]"
         echo ""
     fi
 
@@ -218,36 +204,6 @@ _mkcert:
 # vite builder commands
 @_vite +args="":
     {{vite}} {{args}}
-
-# update "gh-pages" branch with the (versioned and default) current build (./docs) (and keeping all previous versions)
-_githubpages_publish: _ensureGitPorcelain
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    # Mostly CURRENT_BRANCH should be main, but maybe you are testing on a different branch
-    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    if [ -z "$(git branch --list gh-pages)" ]; then
-        git checkout -b gh-pages;
-    fi
-
-    git checkout gh-pages
-
-    git rebase --strategy recursive --strategy-option theirs ${CURRENT_BRANCH}
-
-    # Then build
-    just _browser_assets_build ./v$(cat package.json | jq -r .version)
-    just _browser_assets_build
-
-    # Now commit and push
-    git add --all --force docs
-    git commit -m "site v$(cat package.json | jq -r .version)"
-    git push -uf origin gh-pages
-
-    # Return to the original branch
-    git checkout ${CURRENT_BRANCH}
-    echo -e "👉 Github configuration (once): 🔗 https://github.com/$(git remote get-url origin | sd 'git@github.com:' '' | sd '.git' '')/settings/pages"
-    echo -e "  - {{green}}Source{{normal}}"
-    echo -e "    - {{green}}Branch{{normal}}: gh-pages 📁 /docs"
 
 ####################################################################################
 # Ensure docker image for local and CI operations
