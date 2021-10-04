@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHashParam, SetHashParamOpts } from "./hookHashParam";
+import { useHashParam } from "./hookHashParam";
+import { SetHashParamOpts } from "./util";
 
 /**
  * Hook for getting/setting a hash param int (safely encoded)

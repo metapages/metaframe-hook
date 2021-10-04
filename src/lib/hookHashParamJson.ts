@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHashParam, SetHashParamOpts } from "./hookHashParam";
-import { blobFromBase64String, blobToBase64String } from "./util";
+import { useHashParam } from "./hookHashParam";
+import { blobFromBase64String, blobToBase64String, SetHashParamOpts } from "./util";
 
 /**
  * Hook for getting/setting a hash param JSON blob (safely encoded)
