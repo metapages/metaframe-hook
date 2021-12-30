@@ -122,7 +122,7 @@ export const setHashParamJsonInWindow = (
 export const setHashValueInHashString = (
   hash: string,
   key: string,
-  value: string | undefined,
+  value: string | undefined
 ) => {
   const [preHashParamString, hashObject] = getUrlHashParamsFromHashString(hash);
 
@@ -159,8 +159,30 @@ export const setHashValueInHashString = (
 export const setHashValueJsonInHashString = (
   hash: string,
   key: string,
-  value: object | undefined,
+  value: object | undefined
 ) => {
   const valueString = value ? blobToBase64String(value) : undefined;
   return setHashValueInHashString(hash, key, valueString);
+};
+
+// returns URL string
+export const setHashValueInUrl = (
+  url: string,
+  key: string,
+  value: string | undefined
+) => {
+  const urlBlob = new URL(url);
+  urlBlob.hash = setHashValueInHashString(urlBlob.hash, key, value);
+  return urlBlob.href;
+};
+
+// returns URL string
+export const setHashValueJsonInUrl = (
+  url: string,
+  key: string,
+  value: object | undefined
+) => {
+  const urlBlob = new URL(url);
+  urlBlob.hash = setHashValueJsonInHashString(urlBlob.hash, key, value);
+  return urlBlob.href;
 };
