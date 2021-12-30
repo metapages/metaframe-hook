@@ -19,7 +19,7 @@ export const blobToBase64String = (blob: Record<string, any>) => {
 
 export const blobFromBase64String = (
   value: string | undefined
-): object | undefined => {
+) => {
   if (value && value.length > 0) {
     const blob = JSON.parse(atob(value));
     return blob;
