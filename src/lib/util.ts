@@ -103,7 +103,7 @@ export const setHashParamInWindow = (
     window.history.replaceState(
       null,
       document.title,
-      `${window.location.pathname}${window.location.search}${newHash}`
+      `${window.location.pathname}${window.location.search}${newHash.startsWith("#") ? "" : "#"}${newHash}`
     );
     // Manually trigger a hashchange event:
     // I don't know how to add the previous and new url parameters
