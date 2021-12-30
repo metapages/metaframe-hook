@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useHashParam } from "./hookHashParam";
+import { useHashParam } from "./useHashParam";
 import { blobFromBase64String, blobToBase64String, SetHashParamOpts } from "./util";
 
 /**

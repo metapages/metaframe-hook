@@ -25,7 +25,7 @@ export const blobFromBase64String = (value: string | undefined) => {
   return undefined;
 };
 
-export const getHashParams = (): [string, Record<string, string>] => {
+export const getHashParamsInWindow = (): [string, Record<string, string>] => {
   return getUrlHashParams(window.location.href);
 };
 
@@ -34,13 +34,19 @@ export const getUrlHashParams = (
   url: string
 ): [string, Record<string, string>] => {
   const urlBlob = new URL(url);
-  let hashString = urlBlob.hash.substr(1);
+  return getUrlHashParamsFromHashString(urlBlob.hash);
+};
+
+export const getUrlHashParamsFromHashString = (
+  hash: string
+): [string, Record<string, string>] => {
+  let hashString = hash.startsWith("#") ? hash.substring(1) : hash;
   const queryIndex = hashString.indexOf("?");
   if (queryIndex === -1) {
     return [hashString, {}];
   }
-  const preHashString = hashString.substr(0, queryIndex);
-  hashString = hashString.substr(queryIndex + 1);
+  const preHashString = hashString.substring(0, queryIndex);
+  hashString = hashString.substring(queryIndex + 1);
   // @ts-ignore
   const hashObject = Object.fromEntries(
     hashString
@@ -62,7 +68,7 @@ export const getHashParamValue = (
   return hashParams[key];
 };
 
-export const getHashParamObject = (
+export const getHashParamValueJson = (
   url: string,
   key: string
 ): any | undefined => {
@@ -74,63 +80,87 @@ export const getHashParamObject = (
   return;
 };
 
-export const setHashParam = (
+export const setHashParamInWindow = (
   key: string,
   value: string | undefined,
   opts?: SetHashParamOpts
 ) => {
-  const paramHash = getHashParams()[1];
-
-  let changed = false;
-  if (
-    (paramHash.hasOwnProperty(key) && value === null) ||
-    value === undefined
-  ) {
-    delete paramHash[key];
-    changed = true;
-  } else {
-    if (paramHash[key] !== value) {
-      paramHash[key] = value;
-      changed = true;
-    }
+  const hash = window.location.hash;
+  const newHash = setHashValueInHashString(hash, key, value);
+  if (newHash === hash) {
+    return;
   }
 
-  // don't do work if unneeded
-  if (!changed) {
-    return [];
-  }
-
-  const keys = Object.keys(paramHash);
-  keys.sort();
-  const hash = keys
-    .map((key, i) => {
-      return `${key}=${encodeURI(paramHash[key])}`;
-    })
-    .join("&");
-  // replace after the ? but keep before that
-  let hashString = window.location.hash.substr(1);
-  const queryIndex = hashString.indexOf("?");
-  let preHashString = "";
-  if (queryIndex > -1) {
-    preHashString = hashString.substr(0, queryIndex);
-  }
-
-  const urlBlob = new URL(window.location.href);
-  urlBlob.hash = `${preHashString}?${hash}`;
   if (opts?.modifyHistory) {
     // adds to browser history, so affects back button
     // fires "hashchange" event
-    window.location.hash = `${preHashString}?${hash}`;
+    window.location.hash = newHash;
   } else {
     // The following will NOT work to trigger a 'hashchange' event:
     // Replace the state so the back button works correctly
     window.history.replaceState(
       null,
       document.title,
-      `${urlBlob.pathname}${urlBlob.search}${urlBlob.hash}`
+      `${window.location.pathname}${window.location.search}${newHash}`
     );
     // Manually trigger a hashchange event:
     // I don't know how to add the previous and new url parameters
     window.dispatchEvent(new HashChangeEvent("hashchange"));
   }
+};
+
+export const setHashParamJsonInWindow = (
+  key: string,
+  value: object | undefined,
+  opts?: SetHashParamOpts
+) => {
+  const valueString = value ? blobToBase64String(value) : undefined;
+  setHashParamInWindow(key, valueString, opts);
+};
+
+// returns hash string
+export const setHashValueInHashString = (
+  hash: string,
+  key: string,
+  value: string | undefined,
+) => {
+  const [preHashParamString, hashObject] = getUrlHashParamsFromHashString(hash);
+
+  let changed = false;
+  if (
+    (hashObject.hasOwnProperty(key) && value === null) ||
+    value === undefined
+  ) {
+    delete hashObject[key];
+    changed = true;
+  } else {
+    if (hashObject[key] !== value) {
+      hashObject[key] = value;
+      changed = true;
+    }
+  }
+
+  // don't do work if unneeded
+  if (!changed) {
+    return hash;
+  }
+
+  const keys = Object.keys(hashObject);
+  keys.sort();
+  const hashStringNew = keys
+    .map((key, i) => {
+      return `${key}=${encodeURI(hashObject[key])}`;
+    })
+    .join("&");
+  // replace after the ? but keep before that
+  return `${preHashParamString}?${hashStringNew}`;
+};
+
+export const setHashValueJsonInHashString = (
+  hash: string,
+  key: string,
+  value: object | undefined,
+) => {
+  const valueString = value ? blobToBase64String(value) : undefined;
+  return setHashValueInHashString(hash, key, valueString);
 };
