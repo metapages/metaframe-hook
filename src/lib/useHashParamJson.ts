@@ -8,7 +8,7 @@ import { blobFromBase64String, blobToBase64String, SetHashParamOpts } from "./ut
 export const useHashParamJson = <T>(
   key: string,
   defaultBlob?: T
-): [T | undefined, (v: T | undefined, opts?: SetHashParamOpts) => void] => {
+): [T | undefined, (v?: T | undefined, opts?: SetHashParamOpts) => void] => {
   const [hashParamString, setHashParamString] = useHashParam(
     key,
     defaultBlob ? blobToBase64String(defaultBlob) : undefined
@@ -23,7 +23,7 @@ export const useHashParamJson = <T>(
   }, [key, hashParamString, setHashBlob]);
 
   const setJsonBlob = useCallback(
-    (blob: T | undefined, opts?: SetHashParamOpts) => {
+    (blob?: T | undefined, opts?: SetHashParamOpts) => {
       if (blob === null || blob === undefined) {
         setHashParamString(undefined, opts);
       } else {
