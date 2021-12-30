@@ -17,7 +17,9 @@ export const blobToBase64String = (blob: Record<string, any>) => {
   return btoa(stringify(blob));
 };
 
-export const blobFromBase64String = (value: string | undefined) => {
+export const blobFromBase64String = (
+  value: string | undefined
+): object | undefined => {
   if (value && value.length > 0) {
     const blob = JSON.parse(atob(value));
     return blob;
@@ -74,7 +76,7 @@ export const getHashParamValueJson = (
 ): any | undefined => {
   const valueString = getHashParamValue(url, key);
   if (valueString && valueString !== "") {
-    const value = JSON.parse(atob(valueString));
+    const value = blobFromBase64String(valueString);
     return value;
   }
   return;
