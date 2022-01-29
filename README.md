@@ -1,10 +1,8 @@
-
 # @metapages/metaframe-hook
 
 Use hooks to interact with metaframe inputs and outputs
 
 Also useful hooks for getting/setting parameters into the URL hash parameters
-
 
 ## Installation
 
@@ -21,37 +19,50 @@ Example listening to inputs and setting outputs:
 import {
   MetaframeObject,
   useMetaframe,
-  useHashParamJson,
-  useHashParamBase64,
-  useHashParam,
 } from "@metapages/metaframe-hook";
 
 
 export const App: FunctionalComponent = () => {
 
   // a nice hook handles all the metaframe machinery
-  const metaframe: MetaframeObject = useMetaframe();
+  const metaframeObj: MetaframeObject = useMetaframe();
 
-  // respond to new inputs
-  // let the metapage know we are going to modify our own hash params from user interaction
+  // Respond to new inputs two ways:
+  //   1) this listening mode is bound to reacts render hooks. It is convenient, but less efficient
   useEffect(() => {
     console.log(`I got new inputs from some other metaframe! ${inputs}`);
-  }, [metaframe.inputs]);
+  }, [metaframeObj.inputs]);
+
+  // Respond to new inputs two ways:
+  //   2) bind the listener and cleanup
+  useEffect(() => {
+    if (!metaframeObj.metaframe) {
+      return;
+    }
+    const disposer = metaframeObj.metaframe.onInput("someInputName", (inputValue) => {
+      console.log(`I got new inputs from on channel someInputName! ${inputValue}`);
+    });
+
+    return () => {
+      disposer();
+    }
+
+  }, [metaframeObj.metaframe]);
 
   // somewhere set outputs
-  if (metaframe.setOutputs) {
-      metaframe.setOutputs({"some": "outputs"})
+  if (metaframeObj.setOutputs) {
+      metaframeObj.setOutputs({"some": "outputs"})
   }
 
   // let the metapage know we are going to modify our own hash params from user interaction
   useEffect(() => {
-    if (metaframe.metaframe) {
-      metaframe.metaframe.notifyOnHashUrlChange();
+    if (metaframeObj.metaframe) {
+      metaframeObj.metaframe.notifyOnHashUrlChange();
     }
-  }, [metaframe.metaframe]);
+  }, [metaframeObj.metaframe]);
 
   // Just render the inputs
-  return <div> {metaframe.inputs} </div>
+  return <div> {metaframeObj.inputs} </div>
 }
 
 ```
