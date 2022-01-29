@@ -2,8 +2,6 @@
 
 Use hooks to interact with metaframe inputs and outputs
 
-Also useful hooks for getting/setting parameters into the URL hash parameters
-
 ## Installation
 
 ```sh
