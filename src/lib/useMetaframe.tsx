@@ -64,13 +64,11 @@ export const WithMetaframeAndInputs: React.FC<any> = (props: any) => {
   }, [setMetaframe, setInputs]);
 
   useEffect(() => {
-    if (inputs && metaframe) {
-      setMetaframeObject({
-        metaframe,
-        inputs,
-        setOutputs: metaframe.setOutputs,
-      });
-    }
+    setMetaframeObject({
+      metaframe,
+      inputs,
+      setOutputs: metaframe?.setOutputs,
+    });
   }, [inputs, metaframe]);
 
   return (

@@ -9,6 +9,7 @@
     "emitDeclarationOnly": true,
     // vite recommends this
     "isolatedModules": true,
+    "jsx": "react-jsx",
     "lib": ["ES2020", "ESNext"],
     "module": "ES2020",
     "moduleResolution": "node",
