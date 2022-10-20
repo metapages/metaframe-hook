@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, createContext } from "react";
-import { Metaframe, MetaframeInputMap } from "@metapages/metapage";
+import { Metaframe, MetaframeInputMap, isIframe } from "@metapages/metapage";
 
 export interface MetaframeObject {
   // This is only set when initialized
@@ -50,11 +50,24 @@ export const WithMetaframeAndInputs: React.FC<any> = (props: any) => {
   );
 
   useEffect(() => {
+    let cancelled = false;
     const newMetaframe = new Metaframe();
     const onInputs = (newinputs: MetaframeInputMap): void => {
       setInputs(newinputs);
     };
     newMetaframe.onInputs(onInputs);
+    // if we are an iframe, wait until connected before setting the metaframe
+    if (isIframe()) {
+      newMetaframe.connected().then(() => {
+        if (!cancelled) {
+          setMetaframe(newMetaframe);
+        }
+      });
+    } else {
+      // no iframe so cannot connect so just set right away
+      setMetaframe(newMetaframe);
+    }
+
     setMetaframe(newMetaframe);
     return () => {
       // If the metaframe is cleaned up, also remove the inputs listener
@@ -83,9 +96,22 @@ export const WithMetaframe: React.FC<any> = (props: any) => {
   const [metaframe, setMetaframe] = useState<Metaframe | undefined>(undefined);
 
   useEffect(() => {
+    let cancelled = false;
     const newMetaframe = new Metaframe();
-    setMetaframe(newMetaframe);
+    // if we are an iframe, wait until connected before setting the metaframe
+    if (isIframe()) {
+      newMetaframe.connected().then(() => {
+        if (!cancelled) {
+          setMetaframe(newMetaframe);
+        }
+      });
+    } else {
+      // no iframe so cannot connect so just set right away
+      setMetaframe(newMetaframe);
+    }
+
     return () => {
+      cancelled = true;
       newMetaframe.dispose();
     };
   }, [setMetaframe]);
