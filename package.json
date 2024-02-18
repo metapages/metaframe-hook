@@ -3,7 +3,7 @@
   "version": "1.0.13",
   "repository": {
     "type": "git",
-    "url": "https://github.com/metapages/metaframe-hook"
+    "url": "git+https://github.com/metapages/metaframe-hook.git"
   },
   "files": [
     "dist/**/*",
