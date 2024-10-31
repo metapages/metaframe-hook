@@ -1,37 +1,25 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "esModuleInterop": true,
-    "emitDeclarationOnly": true,
-    // vite recommends this
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "lib": ["ES2020", "ESNext"],
-    "module": "ES2020",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "outDir": "./dist",
-    "paths": {
-      // avoid ../../../../foo type import paths
-      "/@/*": ["./*"],
-    },
-    // https://stackoverflow.com/questions/51634361/how-to-force-tsc-to-ignore-node-modules-folder
-    // true means it won't try to compile node_modules content (even tho already "excluded")
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "target": "ESNext",
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["vite/client"]
+      "baseUrl": "src",
+      "allowSyntheticDefaultImports": true,
+      "declaration": true,
+      "declarationMap": true,
+      "jsx": "react",
+      "lib": ["DOM", "es6"],
+      "module": "esnext",
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "paths": {
+          // avoid ../../../../foo type import paths
+          "/@/*": ["./*"],
+      },
+      "removeComments": true,
+      "sourceMap": true,
+      "strict": true,
+      "target": "es2020",
+      "types": [],
+      // "typeRoots": ["node_modules/@types"],
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["./src/lib/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/**/*", "dist"]
 }
