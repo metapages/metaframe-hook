@@ -19,7 +19,7 @@
     "note": "echo 'use just. See README.md'"
   },
   "peerDependencies": {
-    "@metapages/metapage": "^1.0.3",
+    "@metapages/metapage": "^1.0.4",
     "react": "^18.3.1"
   },
   "devDependencies": {
