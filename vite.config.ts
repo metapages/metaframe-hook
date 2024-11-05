@@ -1,43 +1,56 @@
-import fs from "fs";
-import path from "path";
-import { defineConfig } from "vite";
+import path, { resolve } from 'path';
+import { typescriptPaths } from 'rollup-plugin-typescript-paths';
+import { defineConfig } from 'vite';
 
-// Get the github pages path e.g. if served from https://<name>.github.io/<repo>/
-// then we need to pull out "<repo>"
-const packageName = JSON.parse(
-  fs.readFileSync("./package.json", { encoding: "utf8", flag: "r" })
-)["name"];
+import typescript from '@rollup/plugin-typescript';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => ({
+
+export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
-      "/@": path.resolve(__dirname, "./src"),
+      "/@": resolve(__dirname, "./src"),
     },
   },
+
+  plugins: [],
+
+  esbuild: {
+    logOverride: { "this-is-undefined-in-esm": "silent" },
+  },
+
   build: {
+    outDir: "./dist",
+    target: "modules",
+    emptyOutDir: true,
+    sourcemap: true,
+    minify: "esbuild",
+    reportCompressedSize: true,
     lib: {
-      entry: path.resolve(__dirname, 'src/lib/index.ts'),
-      name: packageName,
-      fileName: (format) => `index.${format}.js`
+      entry: path.resolve(__dirname, "src/lib/index.ts"),
+      formats: ["es"],
+      fileName: (format) => `index.${format === 'es' ? 'js' : format}`,
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ["@metapages/metapage", "react"],
       output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          metapages: "@metapages/metapage",
-          react: "React",
-          "react-dom": "ReactDOM",
-        }
-      }
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        // Make sure to keep separate files for imports
+        // entryFileNames: '[name].js',
+        // chunkFileNames: '[name]-[hash].js',
+        // assetFileNames: '[name]-[hash][extname]',
+      },
+      external: ['react', '@metapages/metapage'],
+      plugins: [
+        typescriptPaths({
+          preserveExtensions: true,
+        }),
+        typescript({
+          sourceMap: true,
+          declaration: true,
+          outDir: "dist",
+        }),
+      ],
     },
-    sourcemap: true,
-    minify: mode === "development" ? false : "esbuild",
-    emptyOutDir: false,
-    target: 'modules',
   },
 }));
