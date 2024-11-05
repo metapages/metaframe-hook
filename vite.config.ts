@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
         // chunkFileNames: '[name]-[hash].js',
         // assetFileNames: '[name]-[hash][extname]',
       },
-      external: [],
+      external: ['react', '@metapages/metapage'],
       plugins: [
         typescriptPaths({
           preserveExtensions: true,
