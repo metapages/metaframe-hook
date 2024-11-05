@@ -57,26 +57,29 @@ export const WithMetaframeAndInputs: React.FC<any> = (props: any) => {
     });
     // if we are an iframe, wait until connected before setting the metaframe
     if (isIframe()) {
-      newMetaframe.connected().then(() => {
+      (async () => {
+        await newMetaframe.connected();
         if (!cancelled) {
           setMetaframe(newMetaframe);
         }
-      });
+      })();
     } else {
       // no iframe so cannot connect so just set right away
       setMetaframe(newMetaframe);
     }
 
-    setMetaframe(newMetaframe);
     return () => {
       cancelled = true;
       // If the metaframe is cleaned up, also remove the inputs listener
       disposeListener();
       newMetaframe.dispose();
     };
-  }, [setMetaframe, setInputs]);
+  }, []);
 
   useEffect(() => {
+    if (!metaframe) {
+      return;
+    }
     setMetaframeObject({
       metaframe,
       inputs,
@@ -100,11 +103,12 @@ export const WithMetaframe: React.FC<any> = (props: any) => {
     const newMetaframe = new Metaframe();
     // if we are an iframe, wait until connected before setting the metaframe
     if (isIframe()) {
-      newMetaframe.connected().then(() => {
+      (async () => {
+        await newMetaframe.connected();
         if (!cancelled) {
           setMetaframe(newMetaframe);
         }
-      });
+      })();
     } else {
       // no iframe so cannot connect so just set right away
       setMetaframe(newMetaframe);
@@ -114,7 +118,7 @@ export const WithMetaframe: React.FC<any> = (props: any) => {
       cancelled = true;
       newMetaframe.dispose();
     };
-  }, [setMetaframe]);
+  }, []);
 
   useEffect(() => {
     if (metaframe) {
