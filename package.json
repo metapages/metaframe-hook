@@ -1,6 +1,6 @@
 {
   "name": "@metapages/metaframe-react-hook",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/metapages/metaframe-hook.git"
@@ -19,8 +19,8 @@
     "note": "echo 'use just. See README.md'"
   },
   "peerDependencies": {
-    "@metapages/metapage": "^1.0.4",
-    "react": "^18.3.1"
+    "@metapages/metapage": "1.x",
+    "react": "18.x"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.1",

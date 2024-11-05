@@ -52,10 +52,9 @@ export const WithMetaframeAndInputs: React.FC<any> = (props: any) => {
   useEffect(() => {
     let cancelled = false;
     const newMetaframe = new Metaframe();
-    const onInputs = (newinputs: MetaframeInputMap): void => {
+    const disposeListener = newMetaframe.onInputs((newinputs: MetaframeInputMap): void => {
       setInputs(newinputs);
-    };
-    newMetaframe.onInputs(onInputs);
+    });
     // if we are an iframe, wait until connected before setting the metaframe
     if (isIframe()) {
       newMetaframe.connected().then(() => {
@@ -70,8 +69,9 @@ export const WithMetaframeAndInputs: React.FC<any> = (props: any) => {
 
     setMetaframe(newMetaframe);
     return () => {
+      cancelled = true;
       // If the metaframe is cleaned up, also remove the inputs listener
-      newMetaframe.removeListener(Metaframe.INPUTS, onInputs);
+      disposeListener();
       newMetaframe.dispose();
     };
   }, [setMetaframe, setInputs]);
