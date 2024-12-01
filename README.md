@@ -1,3 +1,5 @@
+DEPRECATED: use [@metapages/metaframe-react](https://www.npmjs.com/package/@metapages/metaframe-react) instead
+
 # @metapages/metaframe-react-hook
 
 Use hooks to interact with [metaframe](https://docs.metapage.io/) inputs and outputs
